@@ -259,11 +259,12 @@ void BlockLocalPositionEstimator::update()
 	// selection param, but is really not helping outdoors
 	// right now.
 
-	 if (!_lastArmedState && armedState) {
+	 if (_lastArmedState && !armedState) {
 
 	 	// we just armed, we are at origin on the ground
 	 	_x(X_x) = 0;
 	 	_x(X_y) = 0;
+
 	 	// reset Z or not? _x(X_z) = 0;
 
 		// reset flow integral
@@ -282,7 +283,7 @@ void BlockLocalPositionEstimator::update()
 	 	_xLowPass.setState(_x);
 	 	_aglLowPass.setState(0);
 
-        // reset the initialized flage to reinitialize all the sensors
+        // reset the initialized flags to reinitialize all the sensors
         _baroInitialized = false;
         _gpsInitialized = false;
         _flowInitialized = false;
@@ -290,6 +291,16 @@ void BlockLocalPositionEstimator::update()
         _mocapInitialized = false;
         _sonarInitialized = false;
         _visionInitialized = false;
+       _visionStats.reset();
+       _validTZ = false;
+       _validXY = false;
+       _validZ = false;
+       _x.setZero();
+       _u.setZero();
+       initSS();
+
+
+
 	 }
 
 	_lastArmedState = armedState;
